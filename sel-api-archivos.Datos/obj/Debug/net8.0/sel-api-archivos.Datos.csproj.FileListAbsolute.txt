@@ -1,0 +1,15 @@
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/bin/Debug/net8.0/sel-api-archivos.Datos.deps.json
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/bin/Debug/net8.0/sel-api-archivos.Datos.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/bin/Debug/net8.0/sel-api-archivos.Datos.pdb
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/bin/Debug/net8.0/sel-api-archivos.Entidad.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/bin/Debug/net8.0/sel-api-archivos.Entidad.pdb
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-archivos.Datos.csproj.AssemblyReference.cache
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-archivos.Datos.GeneratedMSBuildEditorConfig.editorconfig
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-archivos.Datos.AssemblyInfoInputs.cache
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-archivos.Datos.AssemblyInfo.cs
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-archivos.Datos.csproj.CoreCompileInputs.cache
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-.2935B7BC.Up2Date
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-archivos.Datos.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/refint/sel-api-archivos.Datos.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/sel-api-archivos.Datos.pdb
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Datos/obj/Debug/net8.0/ref/sel-api-archivos.Datos.dll

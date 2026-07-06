@@ -1,0 +1,6 @@
+@sel_api_archivos.Api_HostAddress = http://localhost:5170
+
+GET {{sel_api_archivos.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

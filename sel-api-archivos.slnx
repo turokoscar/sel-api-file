@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="sel-api-archivos.Api/sel-api-archivos.Api.csproj" />
+  <Project Path="sel-api-archivos.Datos/sel-api-archivos.Datos.csproj" />
+  <Project Path="sel-api-archivos.Entidad/sel-api-archivos.Entidad.csproj" />
+  <Project Path="sel-api-archivos.Negocio/sel-api-archivos.Negocio.csproj" />
+  <Project Path="sel-api-archivos.Pruebas/sel-api-archivos.Pruebas.csproj" />
+  <Project Path="sel-api-archivos.Utils/sel-api-archivos.Utils.csproj" />
+</Solution>

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\sel-api-archivos.Datos\sel-api-archivos.Datos.csproj" />
+    <ProjectReference Include="..\sel-api-archivos.Entidad\sel-api-archivos.Entidad.csproj" />
+    <ProjectReference Include="..\sel-api-archivos.Utils\sel-api-archivos.Utils.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>sel_api_archivos.Negocio</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
