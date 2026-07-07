@@ -17,3 +17,4 @@
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Negocio/obj/Debug/net8.0/refint/sel-api-archivos.Negocio.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Negocio/obj/Debug/net8.0/sel-api-archivos.Negocio.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Negocio/obj/Debug/net8.0/ref/sel-api-archivos.Negocio.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Negocio/obj/Debug/net8.0/sel-api-archivos.Negocio.sourcelink.json

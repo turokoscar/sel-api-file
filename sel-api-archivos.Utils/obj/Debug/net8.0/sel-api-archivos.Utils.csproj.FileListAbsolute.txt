@@ -9,3 +9,4 @@
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Utils/obj/Debug/net8.0/refint/sel-api-archivos.Utils.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Utils/obj/Debug/net8.0/sel-api-archivos.Utils.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Utils/obj/Debug/net8.0/ref/sel-api-archivos.Utils.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Utils/obj/Debug/net8.0/sel-api-archivos.Utils.sourcelink.json

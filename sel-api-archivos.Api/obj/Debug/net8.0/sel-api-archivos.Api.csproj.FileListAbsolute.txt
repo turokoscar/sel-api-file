@@ -85,3 +85,4 @@
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/obj/Debug/net8.0/sel-api-archivos.Api.genruntimeconfig.cache
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/obj/Debug/net8.0/ref/sel-api-archivos.Api.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/appsettings.Quality.json
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/obj/Debug/net8.0/sel-api-archivos.Api.sourcelink.json
