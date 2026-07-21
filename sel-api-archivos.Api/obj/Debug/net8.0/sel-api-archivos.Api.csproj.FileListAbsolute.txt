@@ -56,11 +56,9 @@
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Datos.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Entidad.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Negocio.dll
-/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Utils.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Negocio.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Entidad.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Datos.pdb
-/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/bin/Debug/net8.0/sel-api-archivos.Utils.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/obj/Debug/net8.0/sel-api-archivos.Api.csproj.AssemblyReference.cache
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/obj/Debug/net8.0/rpswa.dswa.cache.json
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Api/obj/Debug/net8.0/sel-api-archivos.Api.GeneratedMSBuildEditorConfig.editorconfig

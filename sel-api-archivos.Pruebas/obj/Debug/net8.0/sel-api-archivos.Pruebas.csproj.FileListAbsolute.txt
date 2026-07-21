@@ -144,12 +144,10 @@
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Datos.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Entidad.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Negocio.dll
-/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Utils.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Api.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Negocio.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Datos.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Entidad.pdb
-/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Utils.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/sel-api-archivos.Pruebas.csproj.AssemblyReference.cache
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/sel-api-archivos.Pruebas.GeneratedMSBuildEditorConfig.editorconfig
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/sel-api-archivos.Pruebas.AssemblyInfoInputs.cache
@@ -161,3 +159,5 @@
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/sel-api-archivos.Pruebas.pdb
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/sel-api-archivos.Pruebas.genruntimeconfig.cache
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/ref/sel-api-archivos.Pruebas.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/appsettings.Quality.json
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/sel-api-archivos.Pruebas.sourcelink.json

@@ -611,24 +611,13 @@
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
           "sel-api-archivos.Datos": "1.0.0",
-          "sel-api-archivos.Entidad": "1.0.0",
-          "sel-api-archivos.Utils": "1.0.0"
+          "sel-api-archivos.Entidad": "1.0.0"
         },
         "compile": {
           "bin/placeholder/sel-api-archivos.Negocio.dll": {}
         },
         "runtime": {
           "bin/placeholder/sel-api-archivos.Negocio.dll": {}
-        }
-      },
-      "sel-api-archivos.Utils/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/sel-api-archivos.Utils.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/sel-api-archivos.Utils.dll": {}
         }
       }
     }
@@ -1742,11 +1731,6 @@
       "type": "project",
       "path": "../sel-api-archivos.Negocio/sel-api-archivos.Negocio.csproj",
       "msbuildProject": "../sel-api-archivos.Negocio/sel-api-archivos.Negocio.csproj"
-    },
-    "sel-api-archivos.Utils/1.0.0": {
-      "type": "project",
-      "path": "../sel-api-archivos.Utils/sel-api-archivos.Utils.csproj",
-      "msbuildProject": "../sel-api-archivos.Utils/sel-api-archivos.Utils.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1831,15 +1815,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.28, 8.0.28]"
+            "version": "[8.0.29, 8.0.29]"
           },
           {
             "name": "Microsoft.NETCore.App.Host.linux-x64",
-            "version": "[8.0.28, 8.0.28]"
+            "version": "[8.0.29, 8.0.29]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.28, 8.0.28]"
+            "version": "[8.0.29, 8.0.29]"
           }
         ],
         "frameworkReferences": {
@@ -1850,7 +1834,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.109/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.110/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

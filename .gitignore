@@ -1,0 +1,37 @@
+# Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+
+# .NET specific
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.nupkg
+*.snupkg
+*.cache
+*.dll
+*.exe
+*.pdb
+
+# IDE
+.idea/
+*.swp
+*~
+
+# Docker
+.docker/
+
+# Logs
+*.log
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# Storage (runtime files)
+storage/

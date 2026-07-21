@@ -9,8 +9,7 @@
       "sel-api-archivos.Negocio/1.0.0": {
         "dependencies": {
           "sel-api-archivos.Datos": "1.0.0",
-          "sel-api-archivos.Entidad": "1.0.0",
-          "sel-api-archivos.Utils": "1.0.0"
+          "sel-api-archivos.Entidad": "1.0.0"
         },
         "runtime": {
           "sel-api-archivos.Negocio.dll": {}
@@ -373,14 +372,6 @@
             "fileVersion": "1.0.0.0"
           }
         }
-      },
-      "sel-api-archivos.Utils/1.0.0": {
-        "runtime": {
-          "sel-api-archivos.Utils.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
       }
     }
   },
@@ -564,11 +555,6 @@
       "sha512": ""
     },
     "sel-api-archivos.Entidad/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "sel-api-archivos.Utils/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

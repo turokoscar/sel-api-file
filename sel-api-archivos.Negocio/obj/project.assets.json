@@ -499,16 +499,6 @@
         "runtime": {
           "bin/placeholder/sel-api-archivos.Entidad.dll": {}
         }
-      },
-      "sel-api-archivos.Utils/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/sel-api-archivos.Utils.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/sel-api-archivos.Utils.dll": {}
-        }
       }
     }
   },
@@ -1272,18 +1262,12 @@
       "type": "project",
       "path": "../sel-api-archivos.Entidad/sel-api-archivos.Entidad.csproj",
       "msbuildProject": "../sel-api-archivos.Entidad/sel-api-archivos.Entidad.csproj"
-    },
-    "sel-api-archivos.Utils/1.0.0": {
-      "type": "project",
-      "path": "../sel-api-archivos.Utils/sel-api-archivos.Utils.csproj",
-      "msbuildProject": "../sel-api-archivos.Utils/sel-api-archivos.Utils.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "sel-api-archivos.Datos >= 1.0.0",
-      "sel-api-archivos.Entidad >= 1.0.0",
-      "sel-api-archivos.Utils >= 1.0.0"
+      "sel-api-archivos.Entidad >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1317,9 +1301,6 @@
             },
             "/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Entidad/sel-api-archivos.Entidad.csproj": {
               "projectPath": "/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Entidad/sel-api-archivos.Entidad.csproj"
-            },
-            "/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Utils/sel-api-archivos.Utils.csproj": {
-              "projectPath": "/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Utils/sel-api-archivos.Utils.csproj"
             }
           }
         }
@@ -1353,11 +1334,11 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.28, 8.0.28]"
+            "version": "[8.0.29, 8.0.29]"
           },
           {
             "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.28, 8.0.28]"
+            "version": "[8.0.29, 8.0.29]"
           }
         ],
         "frameworkReferences": {
@@ -1365,7 +1346,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.109/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/10.0.110/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
