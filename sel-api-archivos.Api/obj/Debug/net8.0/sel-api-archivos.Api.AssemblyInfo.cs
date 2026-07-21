@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sel-api-archivos.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d1ee3720cc8282904023aef4c07c97b4806424c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9cb19dff7677dc1c39751ca73cec199f0b055783")]
 [assembly: System.Reflection.AssemblyProductAttribute("sel-api-archivos.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sel-api-archivos.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

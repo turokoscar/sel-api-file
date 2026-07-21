@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using sel_api_archivos.Datos;
 using sel_api_archivos.Entidad;
@@ -18,6 +19,7 @@ namespace sel_api_archivos.Pruebas
         private readonly IArchivoRepositorio _repositorioMock;
         private readonly IStorageProviderResolver _resolverMock;
         private readonly IStorageProvider _storageMock;
+        private readonly ILogger<ArchivoServicio> _loggerMock;
         private readonly ArchivoServicio _servicio;
 
         public ArchivoServicioTests()
@@ -25,8 +27,271 @@ namespace sel_api_archivos.Pruebas
             _repositorioMock = Substitute.For<IArchivoRepositorio>();
             _resolverMock = Substitute.For<IStorageProviderResolver>();
             _storageMock = Substitute.For<IStorageProvider>();
+            _loggerMock = Substitute.For<ILogger<ArchivoServicio>>();
 
-            _servicio = new ArchivoServicio(_repositorioMock, _resolverMock);
+            _servicio = new ArchivoServicio(_repositorioMock, _resolverMock, _loggerMock);
+        }
+
+        [Fact]
+        public async Task SubirArchivoAsync_StreamNull_LanzaArgumentNullException()
+        {
+            // Arrange
+            Func<Task> act = async () => await _servicio.SubirArchivoAsync(
+                stream: null!,
+                nombreOriginal: "test.txt",
+                contentType: "text/plain",
+                codSistema: "KOFIX",
+                codProceso: null,
+                usuario: "test",
+                ipOrigen: "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<ArgumentNullException>()
+                .WithParameterName("stream");
+        }
+
+        [Fact]
+        public async Task SubirArchivoAsync_NombreOriginalNull_LanzaArgumentException()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("contenido"));
+            Func<Task> act = async () => await _servicio.SubirArchivoAsync(
+                stream: stream,
+                nombreOriginal: null!,
+                contentType: "text/plain",
+                codSistema: "KOFIX",
+                codProceso: null,
+                usuario: "test",
+                ipOrigen: "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage("*nombreOriginal*");
+        }
+
+        [Fact]
+        public async Task SubirArchivoAsync_StreamVacio_LanzaArgumentException()
+        {
+            // Arrange
+            using var stream = new MemoryStream();
+            Func<Task> act = async () => await _servicio.SubirArchivoAsync(
+                stream: stream,
+                nombreOriginal: "test.txt",
+                contentType: "text/plain",
+                codSistema: "KOFIX",
+                codProceso: null,
+                usuario: "test",
+                ipOrigen: "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage("*ARCHIVO_VACIO_0001*");
+        }
+
+        [Fact]
+        public async Task SubirArchivoAsync_ProveedorNoDisponible_LanzaInvalidOperationException()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("contenido"));
+            _repositorioMock.ListarProveedoresActivosAsync()
+                .Returns(Task.FromResult<IEnumerable<ProveedorEntity>>(
+                    new List<ProveedorEntity>()));
+
+            Func<Task> act = async () => await _servicio.SubirArchivoAsync(
+                stream: stream,
+                nombreOriginal: "test.txt",
+                contentType: "text/plain",
+                codSistema: "KOFIX",
+                codProceso: null,
+                usuario: "test",
+                ipOrigen: "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                .WithMessage("*PROVEEDOR_NO_DISPONIBLE_0001*");
+        }
+
+        [Fact]
+        public async Task SubirArchivoAsync_TamanioExcedeLimite_LanzaArgumentException()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("contenido grande"));
+            var proveedorActivo = new ProveedorEntity
+            {
+                IdeProveedor = 1,
+                CodProveedor = "LOCAL",
+                JsnConfiguracion = "{\"maxFileSizeBytes\": 5}",
+                FlgActivo = true
+            };
+
+            _repositorioMock.ListarProveedoresActivosAsync()
+                .Returns(Task.FromResult<IEnumerable<ProveedorEntity>>(
+                    new List<ProveedorEntity> { proveedorActivo }));
+
+            Func<Task> act = async () => await _servicio.SubirArchivoAsync(
+                stream: stream,
+                nombreOriginal: "test.txt",
+                contentType: "text/plain",
+                codSistema: "KOFIX",
+                codProceso: null,
+                usuario: "test",
+                ipOrigen: "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage("*ARCHIVO_TAMANIO_EXCEDIDO_0001*");
+        }
+
+        [Fact]
+        public async Task SubirArchivoAsync_TipoNoPermitido_LanzaArgumentException()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("contenido"));
+            var proveedorActivo = new ProveedorEntity
+            {
+                IdeProveedor = 1,
+                CodProveedor = "LOCAL",
+                JsnConfiguracion = "{\"allowedContentTypes\": [\"application/pdf\"]}",
+                FlgActivo = true
+            };
+
+            _repositorioMock.ListarProveedoresActivosAsync()
+                .Returns(Task.FromResult<IEnumerable<ProveedorEntity>>(
+                    new List<ProveedorEntity> { proveedorActivo }));
+
+            Func<Task> act = async () => await _servicio.SubirArchivoAsync(
+                stream: stream,
+                nombreOriginal: "test.txt",
+                contentType: "text/plain",
+                codSistema: "KOFIX",
+                codProceso: null,
+                usuario: "test",
+                ipOrigen: "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<ArgumentException>()
+                .WithMessage("*ARCHIVO_TIPO_NO_PERMITIDO_0001*");
+        }
+
+        [Fact]
+        public async Task ObtenerMetadataAsync_ArchivoNoExiste_LanzaFileNotFoundException()
+        {
+            // Arrange
+            var idInexistente = Guid.NewGuid();
+            _repositorioMock.ObtenerArchivoPorIdAsync(idInexistente)
+                .Returns(Task.FromResult<ArchivoEntity?>(null));
+
+            Func<Task> act = () => _servicio.ObtenerMetadataAsync(idInexistente);
+
+            // Act & Assert
+            await act.Should().ThrowAsync<FileNotFoundException>()
+                .WithMessage("*ARCHIVO_NO_ENCONTRADO_0001*");
+        }
+
+        [Fact]
+        public async Task DescargarArchivoAsync_ArchivoNoExiste_LanzaFileNotFoundException()
+        {
+            // Arrange
+            var idInexistente = Guid.NewGuid();
+            _repositorioMock.ObtenerArchivoPorIdAsync(idInexistente)
+                .Returns(Task.FromResult<ArchivoEntity?>(null));
+
+            Func<Task> act = () => _servicio.DescargarArchivoAsync(idInexistente, "test", "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<FileNotFoundException>()
+                .WithMessage("*ARCHIVO_NO_ENCONTRADO_0001*");
+        }
+
+        [Fact]
+        public async Task DescargarArchivoAsync_ProveedorInactivo_LanzaInvalidOperationException()
+        {
+            // Arrange
+            var idArchivo = Guid.NewGuid();
+            var metadata = new ArchivoEntity
+            {
+                IdeArchivo = idArchivo,
+                IdeProveedor = 99,
+                TxtNombreFisico = "test.pdf",
+                TxtRutaRelativa = "KOFIX/GENERAL"
+            };
+
+            _repositorioMock.ObtenerArchivoPorIdAsync(idArchivo)
+                .Returns(Task.FromResult<ArchivoEntity?>(metadata));
+
+            _repositorioMock.ListarProveedoresActivosAsync()
+                .Returns(Task.FromResult<IEnumerable<ProveedorEntity>>(
+                    new List<ProveedorEntity>()));
+
+            Func<Task> act = () => _servicio.DescargarArchivoAsync(idArchivo, "test", "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<InvalidOperationException>()
+                .WithMessage("*PROVEEDOR_NO_DISPONIBLE_0002*");
+        }
+
+        [Fact]
+        public async Task EliminarArchivoAsync_ArchivoNoExiste_LanzaFileNotFoundException()
+        {
+            // Arrange
+            var idInexistente = Guid.NewGuid();
+            _repositorioMock.ObtenerArchivoPorIdAsync(idInexistente)
+                .Returns(Task.FromResult<ArchivoEntity?>(null));
+
+            Func<Task> act = () => _servicio.EliminarArchivoAsync(idInexistente, "test", "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<FileNotFoundException>()
+                .WithMessage("*ARCHIVO_NO_ENCONTRADO_0001*");
+        }
+
+        [Fact]
+        public async Task LeerContenidoTextoAsync_ArchivoNoExiste_LanzaFileNotFoundException()
+        {
+            // Arrange
+            var idInexistente = Guid.NewGuid();
+            _repositorioMock.ObtenerArchivoPorIdAsync(idInexistente)
+                .Returns(Task.FromResult<ArchivoEntity?>(null));
+
+            Func<Task> act = () => _servicio.LeerContenidoTextoAsync(idInexistente, "test", "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<FileNotFoundException>()
+                .WithMessage("*ARCHIVO_NO_ENCONTRADO_0001*");
+        }
+
+        [Fact]
+        public async Task SubirArchivoAsync_ProviderCodeDesconocido_LanzaKeyNotFoundException()
+        {
+            // Arrange
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes("contenido"));
+            var proveedorActivo = new ProveedorEntity
+            {
+                IdeProveedor = 1,
+                CodProveedor = "DESCONOCIDO",
+                JsnConfiguracion = "{}",
+                FlgActivo = true
+            };
+
+            _repositorioMock.ListarProveedoresActivosAsync()
+                .Returns(Task.FromResult<IEnumerable<ProveedorEntity>>(
+                    new List<ProveedorEntity> { proveedorActivo }));
+
+            _resolverMock.Resolve("DESCONOCIDO")
+                .Returns(_ => throw new KeyNotFoundException("PROVEEDOR_NO_DISPONIBLE_0003: Proveedor no encontrado"));
+
+            Func<Task> act = async () => await _servicio.SubirArchivoAsync(
+                stream: stream,
+                nombreOriginal: "test.txt",
+                contentType: "text/plain",
+                codSistema: "KOFIX",
+                codProceso: null,
+                usuario: "test",
+                ipOrigen: "127.0.0.1");
+
+            // Act & Assert
+            await act.Should().ThrowAsync<KeyNotFoundException>()
+                .WithMessage("*PROVEEDOR_NO_DISPONIBLE_0003*");
         }
 
         [Fact]
@@ -52,7 +317,8 @@ namespace sel_api_archivos.Pruebas
             };
 
             _repositorioMock.ListarProveedoresActivosAsync()
-                .Returns(new List<ProveedorEntity> { proveedorActivo });
+                .Returns(Task.FromResult<IEnumerable<ProveedorEntity>>(
+                    new List<ProveedorEntity> { proveedorActivo }));
 
             _resolverMock.Resolve("LOCAL")
                 .Returns(_storageMock);
@@ -109,7 +375,8 @@ namespace sel_api_archivos.Pruebas
                 .Returns(Task.FromResult<ArchivoEntity?>(metadata));
 
             _repositorioMock.ListarProveedoresActivosAsync()
-                .Returns(new List<ProveedorEntity> { proveedor });
+                .Returns(Task.FromResult<IEnumerable<ProveedorEntity>>(
+                    new List<ProveedorEntity> { proveedor }));
 
             _resolverMock.Resolve("LOCAL")
                 .Returns(_storageMock);

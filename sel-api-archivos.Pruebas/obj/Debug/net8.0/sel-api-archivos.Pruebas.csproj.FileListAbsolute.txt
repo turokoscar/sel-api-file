@@ -161,3 +161,17 @@
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/ref/sel-api-archivos.Pruebas.dll
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/appsettings.Quality.json
 /home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/obj/Debug/net8.0/sel-api-archivos.Pruebas.sourcelink.json
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Api.xml
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Negocio.xml
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Datos.xml
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/sel-api-archivos.Entidad.xml
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Microsoft.Extensions.DependencyModel.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.AspNetCore.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.Extensions.Hosting.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.Extensions.Logging.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.Formatting.Compact.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.Settings.Configuration.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.Sinks.Console.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.Sinks.Debug.dll
+/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/sel-api-archivos.Pruebas/bin/Debug/net8.0/Serilog.Sinks.File.dll

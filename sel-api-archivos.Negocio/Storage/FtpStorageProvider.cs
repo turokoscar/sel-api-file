@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace sel_api_archivos.Negocio.Storage
@@ -14,72 +15,50 @@ namespace sel_api_archivos.Negocio.Storage
     /// No debe usarse en entornos de producción. Para producción, implementar un proveedor
     /// real con FluentFTP, WinSCP o similar, y eliminar esta clase.
     /// </remarks>
-    public class FtpStorageProvider : IStorageProvider
+    public sealed class FtpStorageProvider : IStorageProvider
     {
         /// <summary>
         /// Código identificador del proveedor: "FTP".
         /// </summary>
         public string ProviderCode => "FTP";
 
-        /// <summary>
-        /// Simula la subida de un archivo al servidor FTP.
-        /// </summary>
-        /// <param name="fileStream">Stream del archivo a subir.</param>
-        /// <param name="fileName">Nombre físico del archivo.</param>
-        /// <param name="relativePath">Ruta relativa de almacenamiento.</param>
-        /// <param name="configJson">Configuración JSON con Host, Port, Username, Password.</param>
-        /// <returns>URL simulada del archivo subido.</returns>
+        /// <inheritdoc />
         public Task<string> UploadAsync(Stream fileStream, string fileName, string relativePath, string configJson)
         {
-            EmitStubWarning("UploadAsync", fileName, relativePath);
+            EmitStubWarning("UploadAsync", fileName, relativePath, configJson);
             return Task.FromResult($"ftp://server/{relativePath}/{fileName}");
         }
 
-        /// <summary>
-        /// Simula la descarga de un archivo desde el servidor FTP.
-        /// </summary>
-        /// <param name="physicalName">Nombre físico del archivo.</param>
-        /// <param name="relativePath">Ruta relativa del archivo.</param>
-        /// <param name="configJson">Configuración JSON con Host, Port, Username, Password.</param>
-        /// <returns>Stream con contenido simulado.</returns>
+        /// <inheritdoc />
         public Task<Stream> DownloadAsync(string physicalName, string relativePath, string configJson)
         {
-            EmitStubWarning("DownloadAsync", physicalName, relativePath);
+            EmitStubWarning("DownloadAsync", physicalName, relativePath, configJson);
             Stream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes("Contenido FTP Simulado"));
             return Task.FromResult(memoryStream);
         }
 
-        /// <summary>
-        /// Simula la eliminación de un archivo en el servidor FTP.
-        /// </summary>
-        /// <param name="physicalName">Nombre físico del archivo.</param>
-        /// <param name="relativePath">Ruta relativa del archivo.</param>
-        /// <param name="configJson">Configuración JSON con Host, Port, Username, Password.</param>
-        /// <returns>Siempre true.</returns>
+        /// <inheritdoc />
         public Task<bool> DeleteAsync(string physicalName, string relativePath, string configJson)
         {
-            EmitStubWarning("DeleteAsync", physicalName, relativePath);
+            EmitStubWarning("DeleteAsync", physicalName, relativePath, configJson);
             return Task.FromResult(true);
         }
 
-        /// <summary>
-        /// Simula la lectura de contenido de texto desde el servidor FTP.
-        /// </summary>
-        /// <param name="physicalName">Nombre físico del archivo.</param>
-        /// <param name="relativePath">Ruta relativa del archivo.</param>
-        /// <param name="configJson">Configuración JSON con Host, Port, Username, Password.</param>
-        /// <returns>Cadena de texto simulada.</returns>
+        /// <inheritdoc />
         public Task<string> ReadTextContentAsync(string physicalName, string relativePath, string configJson)
         {
-            EmitStubWarning("ReadTextContentAsync", physicalName, relativePath);
+            EmitStubWarning("ReadTextContentAsync", physicalName, relativePath, configJson);
             return Task.FromResult("Contenido de texto FTP Simulado");
         }
 
-        private static void EmitStubWarning(string methodName, string fileName, string relativePath)
+        private static void EmitStubWarning(string methodName, string fileName, string relativePath, string configJson)
         {
+            var config = JsonSerializer.Deserialize<StorageProviderConfig>(configJson);
             Console.Error.WriteLine(
-                $"[FtpStorageProvider STUB] {methodName} llamado — esto es un stub no productivo. " +
-                $"Archivo: {fileName}, Ruta: {relativePath}");
+                $"[FtpStorageProvider STUB] {methodName} — stub no productivo. " +
+                $"Archivo: {fileName}, Ruta: {relativePath}, " +
+                $"Límite: {config?.MaxFileSizeBytes ?? 0} bytes, " +
+                $"Tipos permitidos: {config?.AllowedContentTypes?.Count ?? 0}");
         }
     }
 }

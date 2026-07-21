@@ -72,6 +72,17 @@ dotnet run --project sel-api-archivos.Api  # Development server (requires SQL Se
 
 No CI, no pre-commit hooks, no codegen, no formatter/lint config in repo.
 
+## Logging (Structured JSON — Dlozze/Kibana)
+
+- **Provider**: Serilog with `CompactJsonFormatter`, console sink
+- **EventIds**: Defined in `Api/Logging/LogEventIds.cs` (16 EventIds, range 1001–3002)
+- **Structured fields**: `EventId`, `CorrelationId`, `User`, `IpOrigen`, `CodSistema`, `FileId`, `DurationMs`, `StatusCode`, `ErrorCode`
+- **CorrelationId**: Injected via `BeginScope()` in `ArchivoServicio`; carried via `HttpContext.Items` in `ArchivosController`
+- **DurationMs**: Measured via `Stopwatch` in both `ArchivoServicio` and `ArchivosController`
+- **Controller request lifecycle**: `IActionFilter` explicit implementation (not override) — `ControllerBase` does not support `OnActionExecuting`/`OnActionExecuted` overrides
+- **Serilog bootstrap**: `CompactJsonFormatter`, `shared: true`, `WithProperty("Application","sel-api-archivos")`, graceful shutdown via `try/finally`
+- **`ConfigureAwait(false)`**: All `await` in `ArchivoRepositorio.cs` and all storage providers
+
 ## Conventions & Quirks
 
 - All entity property names use Hungarian-like prefixes (`TxtNombreOriginal`, `CanTamanioBytes`, `FlgActivo`, `IdeArchivo`, `FecCreacion`)

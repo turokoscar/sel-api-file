@@ -37,6 +37,7 @@
           }
         },
         "warningProperties": {
+          "allWarningsAsErrors": true,
           "warnAsError": [
             "NU1605"
           ]
@@ -55,6 +56,18 @@
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Serilog.Formatting.Compact": {
+              "target": "Package",
+              "version": "[2.0.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[5.0.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -128,6 +141,7 @@
           }
         },
         "warningProperties": {
+          "allWarningsAsErrors": true,
           "warnAsError": [
             "NU1605"
           ]
@@ -208,6 +222,7 @@
           }
         },
         "warningProperties": {
+          "allWarningsAsErrors": true,
           "warnAsError": [
             "NU1605"
           ]
@@ -285,6 +300,7 @@
           }
         },
         "warningProperties": {
+          "allWarningsAsErrors": true,
           "warnAsError": [
             "NU1605"
           ]
@@ -368,6 +384,7 @@
           }
         },
         "warningProperties": {
+          "allWarningsAsErrors": true,
           "warnAsError": [
             "NU1605"
           ]

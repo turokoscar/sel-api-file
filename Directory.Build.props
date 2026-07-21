@@ -4,11 +4,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>12</LangVersion>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <!-- Suprimir CS1591 (missing XML comment) hasta que se complete la Fase 2 -->
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 </Project>

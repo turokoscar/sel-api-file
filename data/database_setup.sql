@@ -170,8 +170,10 @@ END;
 GO
 
 -- 6. Insertar Proveedores de Almacenamiento Iniciales de Prueba/Configuración
+-- Configuración: localStoragePath (ruta base), maxFileSizeBytes (0 = sin límite),
+-- allowedContentTypes (vacío = permite todos)
 INSERT INTO ARC.SEL_ARC_TG_PROVEEDOR (codProveedor, txtNombre, jsnConfiguracion, flgActivo)
-VALUES 
-('LOCAL', 'Almacenamiento Local Servidor', '{"LocalStoragePath": "/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/storage"}', 1),
-('FTP', 'Servidor FTP Externo', '{"Host": "127.0.0.1", "Port": 21, "Username": "anonymous", "Password": ""}', 1);
+VALUES
+('LOCAL', 'Almacenamiento Local Servidor', '{"localStoragePath": "/home/opazos/MyProjects/AGROIDEAS/SEL_APIS/sel-api-archivos/storage", "maxFileSizeBytes": 52428800, "allowedContentTypes": ["application/pdf", "image/png", "image/jpeg", "text/plain"]}', 1),
+('FTP', 'Servidor FTP Externo', '{"localStoragePath": "/ftp/storage", "maxFileSizeBytes": 10485760, "allowedContentTypes": ["application/pdf"]}', 1);
 GO

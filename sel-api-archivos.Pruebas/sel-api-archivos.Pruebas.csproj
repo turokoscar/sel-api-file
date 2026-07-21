@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>sel_api_archivos.Pruebas</RootNamespace>
     <IsPackable>false</IsPackable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

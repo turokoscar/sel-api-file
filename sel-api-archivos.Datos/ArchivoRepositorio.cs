@@ -8,15 +8,25 @@ using sel_api_archivos.Entidad;
 
 namespace sel_api_archivos.Datos
 {
-    public class ArchivoRepositorio : IArchivoRepositorio
+    /// <summary>
+    /// Implementación de <see cref="IArchivoRepositorio"/> usando Dapper y SQL Server.
+    /// Todas las operaciones se ejecutan a través de procedimientos almacenados en el schema <c>ARC</c>.
+    /// </summary>
+    public sealed class ArchivoRepositorio : IArchivoRepositorio
     {
         private readonly string _connectionString;
 
+        /// <summary>
+        /// Inicializa una nueva instancia con la cadena de conexión a SQL Server.
+        /// </summary>
+        /// <param name="connectionString">Cadena de conexión a la base de datos.</param>
+        /// <exception cref="ArgumentNullException">Cuando <paramref name="connectionString"/> es <c>null</c>.</exception>
         public ArchivoRepositorio(string connectionString)
         {
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
         }
 
+        /// <inheritdoc />
         public async Task<Guid> RegistrarArchivoAsync(ArchivoEntity archivo)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -38,11 +48,12 @@ namespace sel_api_archivos.Datos
                 "ARC.SEL_ARC_SP_C_ARCHIVO",
                 parameters,
                 commandType: CommandType.StoredProcedure
-            );
+            ).ConfigureAwait(false);
 
             return parameters.Get<Guid>("@ideArchivoGenerated");
         }
 
+        /// <inheritdoc />
         public async Task<ArchivoEntity?> ObtenerArchivoPorIdAsync(Guid ideArchivo)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -50,9 +61,10 @@ namespace sel_api_archivos.Datos
                 "ARC.SEL_ARC_SP_R_ARCHIVO",
                 new { ideArchivo },
                 commandType: CommandType.StoredProcedure
-            );
+            ).ConfigureAwait(false);
         }
 
+        /// <inheritdoc />
         public async Task<bool> EliminarArchivoAsync(Guid ideArchivo)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -60,10 +72,11 @@ namespace sel_api_archivos.Datos
                 "ARC.SEL_ARC_SP_D_ARCHIVO",
                 new { ideArchivo },
                 commandType: CommandType.StoredProcedure
-            );
+            ).ConfigureAwait(false);
             return rowsAffected > 0;
         }
 
+        /// <inheritdoc />
         public async Task RegistrarAuditoriaAsync(Guid ideArchivo, string txtAccion, string? txtUsuario, string? txtIpOrigen)
         {
             using var connection = new SqlConnection(_connectionString);
@@ -71,16 +84,17 @@ namespace sel_api_archivos.Datos
                 "ARC.SEL_ARC_SP_C_AUDITORIA",
                 new { ideArchivo, txtAccion, txtUsuario, txtIpOrigen },
                 commandType: CommandType.StoredProcedure
-            );
+            ).ConfigureAwait(false);
         }
 
+        /// <inheritdoc />
         public async Task<IEnumerable<ProveedorEntity>> ListarProveedoresActivosAsync()
         {
             using var connection = new SqlConnection(_connectionString);
             return await connection.QueryAsync<ProveedorEntity>(
                 "ARC.SEL_ARC_SP_R_PROVEEDORES",
                 commandType: CommandType.StoredProcedure
-            );
+            ).ConfigureAwait(false);
         }
     }
 }
