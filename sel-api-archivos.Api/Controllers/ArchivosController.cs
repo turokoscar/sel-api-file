@@ -163,7 +163,7 @@ namespace sel_api_archivos.Api.Controllers
                 GetIpOrigen()
             );
 
-            return Ok(new { ideArchivo });
+            return Ok(RespuestaEstandar.Exito(new { ideArchivo }));
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace sel_api_archivos.Api.Controllers
         public async Task<IActionResult> ObtenerMetadata(Guid id)
         {
             var metadata = await _archivoServicio.ObtenerMetadataAsync(id);
-            return Ok(metadata);
+            return Ok(RespuestaEstandar.Exito(metadata));
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace sel_api_archivos.Api.Controllers
                 GetIpOrigen()
             );
 
-            return Ok(new { contenido });
+            return Ok(RespuestaEstandar.Exito(new { contenido }));
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace sel_api_archivos.Api.Controllers
                 return NotFound(RespuestaEstandar.Error("El archivo no pudo ser eliminado o ya no existe."));
             }
 
-            return Ok(new { eliminado });
+            return Ok(RespuestaEstandar.Exito(new { eliminado }));
         }
     }
 }
