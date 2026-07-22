@@ -37,6 +37,9 @@ RUN mkdir -p /app/storage && chown -R appuser:appgroup /app/storage
 RUN chown -R appuser:appgroup /app
 USER appuser
 
+# Connection string via environment variable (sobreescribe appsettings.json)
+ENV ASPNETCORE_ConnectionStrings__DefaultConnection="Server=sql-server;Database=BD_API_FILE;User Id=usr_api_file_app;Password=${DB_PASSWORD};TrustServerCertificate=True;"
+
 EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "sel-api-archivos.Api.dll"]
