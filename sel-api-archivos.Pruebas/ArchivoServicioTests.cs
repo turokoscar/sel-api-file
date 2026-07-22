@@ -94,7 +94,7 @@ namespace sel_api_archivos.Pruebas
                 ipOrigen: "127.0.0.1");
 
             // Act & Assert
-            await act.Should().ThrowAsync<ArgumentException>()
+            await act.Should().ThrowAsync<ArchivoVacioException>()
                 .WithMessage("*ARCHIVO_VACIO_0001*");
         }
 
@@ -117,7 +117,7 @@ namespace sel_api_archivos.Pruebas
                 ipOrigen: "127.0.0.1");
 
             // Act & Assert
-            await act.Should().ThrowAsync<InvalidOperationException>()
+            await act.Should().ThrowAsync<ProveedorNoDisponibleException>()
                 .WithMessage("*PROVEEDOR_NO_DISPONIBLE_0001*");
         }
 
@@ -148,7 +148,7 @@ namespace sel_api_archivos.Pruebas
                 ipOrigen: "127.0.0.1");
 
             // Act & Assert
-            await act.Should().ThrowAsync<ArgumentException>()
+            await act.Should().ThrowAsync<ArchivoTamanioExcedidoException>()
                 .WithMessage("*ARCHIVO_TAMANIO_EXCEDIDO_0001*");
         }
 
@@ -179,7 +179,7 @@ namespace sel_api_archivos.Pruebas
                 ipOrigen: "127.0.0.1");
 
             // Act & Assert
-            await act.Should().ThrowAsync<ArgumentException>()
+            await act.Should().ThrowAsync<ArchivoTipoNoPermitidoException>()
                 .WithMessage("*ARCHIVO_TIPO_NO_PERMITIDO_0001*");
         }
 
@@ -236,7 +236,7 @@ namespace sel_api_archivos.Pruebas
             Func<Task> act = () => _servicio.DescargarArchivoAsync(idArchivo, "test", "127.0.0.1");
 
             // Act & Assert
-            await act.Should().ThrowAsync<InvalidOperationException>()
+            await act.Should().ThrowAsync<ProveedorInactivoException>()
                 .WithMessage("*PROVEEDOR_NO_DISPONIBLE_0002*");
         }
 

@@ -39,13 +39,17 @@ namespace sel_api_archivos.Negocio.Storage
         /// <inheritdoc />
         public IStorageProvider Resolve(string providerCode)
         {
+            if (_providers == null || !_providers.Any())
+            {
+                throw new ProveedorNoDisponibleException();
+            }
+
             var provider = _providers.FirstOrDefault(
                 p => p.ProviderCode.Equals(providerCode, StringComparison.OrdinalIgnoreCase));
 
             if (provider == null)
             {
-                throw new KeyNotFoundException(
-                    $"PROVEEDOR_NO_DISPONIBLE_0003: No se encontró un proveedor de almacenamiento para el código '{providerCode}'.");
+                throw new ProveedorCodigoDesconocidoException(providerCode);
             }
 
             return provider;

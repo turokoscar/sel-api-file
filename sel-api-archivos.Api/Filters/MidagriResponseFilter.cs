@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using sel_api_archivos.Entidad;
+using sel_api_archivos.Negocio.Archivo;
+using sel_api_archivos.Negocio.Storage;
 
 namespace sel_api_archivos.Api.Filters
 {
@@ -60,15 +62,15 @@ namespace sel_api_archivos.Api.Filters
             var (statusCode, errorCode) = MapExceptionToStatusCode(exception);
 
             string mensajeError;
-            if (exception is ArgumentException argEx && argEx.Message.Contains('_'))
+            if (exception is ArchivoException ae)
             {
-                mensajeError = exception.Message;
+                mensajeError = ae.Message;
             }
-            else if (exception is FileNotFoundException fnfEx && fnfEx.Message.Contains('_'))
+            else if (exception is ProveedorException pe)
             {
-                mensajeError = exception.Message;
+                mensajeError = pe.Message;
             }
-            else if (exception is InvalidOperationException ioEx && ioEx.Message.Contains('_'))
+            else if (exception is FileNotFoundException)
             {
                 mensajeError = exception.Message;
             }
@@ -104,25 +106,19 @@ namespace sel_api_archivos.Api.Filters
         {
             return exception switch
             {
-                ArgumentException { Message: var msg } when msg.StartsWith("ARCHIVO_") || msg.StartsWith("PARAM_")
-                    => (StatusCodes.Status400BadRequest, "BAD_REQUEST"),
-
-                ArgumentException
-                    => (StatusCodes.Status400BadRequest, "BAD_REQUEST"),
-
+                ArchivoVacioException => (StatusCodes.Status400BadRequest, "ARCHIVO_VACIO"),
+                ArchivoTamanioExcedidoException => (StatusCodes.Status400BadRequest, "ARCHIVO_TAMANIO_EXCEDIDO"),
+                ArchivoTipoNoPermitidoException => (StatusCodes.Status400BadRequest, "ARCHIVO_TIPO_NO_PERMITIDO"),
+                ProveedorNoDisponibleException => (StatusCodes.Status503ServiceUnavailable, "PROVEEDOR_NO_DISPONIBLE"),
+                ProveedorInactivoException => (StatusCodes.Status503ServiceUnavailable, "PROVEEDOR_NO_DISPONIBLE"),
+                ProveedorCodigoDesconocidoException => (StatusCodes.Status503ServiceUnavailable, "PROVEEDOR_NO_DISPONIBLE"),
                 FileNotFoundException { Message: var msg } when msg.StartsWith("ARCHIVO_NO_ENCONTRADO")
-                    => (StatusCodes.Status404NotFound, "NOT_FOUND"),
-
+                    => (StatusCodes.Status404NotFound, "ARCHIVO_NO_ENCONTRADO"),
                 FileNotFoundException
                     => (StatusCodes.Status404NotFound, "NOT_FOUND"),
-
-                InvalidOperationException { Message: var msg } when msg.StartsWith("PROVEEDOR_NO_DISPONIBLE")
-                    => (StatusCodes.Status503ServiceUnavailable, "SERVICE_UNAVAILABLE"),
-
-                InvalidOperationException
-                    => (StatusCodes.Status500InternalServerError, "INTERNAL_ERROR"),
-
-                _ => (StatusCodes.Status500InternalServerError, "INTERNAL_ERROR")
+                KeyNotFoundException
+                    => (StatusCodes.Status503ServiceUnavailable, "PROVEEDOR_NO_DISPONIBLE"),
+                _ => (StatusCodes.Status500InternalServerError, "ERROR_INTERNO")
             };
         }
     }

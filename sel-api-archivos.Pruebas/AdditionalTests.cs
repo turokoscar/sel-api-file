@@ -55,7 +55,7 @@ namespace sel_api_archivos.Pruebas
 
             Action act = () => resolver.Resolve("S3");
 
-            act.Should().Throw<KeyNotFoundException>()
+            act.Should().Throw<ProveedorCodigoDesconocidoException>()
                 .WithMessage("*PROVEEDOR_NO_DISPONIBLE_0003*");
         }
 
@@ -66,7 +66,7 @@ namespace sel_api_archivos.Pruebas
 
             Action act = () => resolver.Resolve("LOCAL");
 
-            act.Should().Throw<KeyNotFoundException>();
+            act.Should().Throw<ProveedorNoDisponibleException>();
         }
     }
 

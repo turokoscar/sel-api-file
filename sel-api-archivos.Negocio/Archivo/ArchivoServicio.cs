@@ -98,7 +98,7 @@ namespace sel_api_archivos.Negocio.Archivo
                         "ARCHIVO_VACIO_0001: El archivo a subir está vacío. " +
                         "NombreOriginal: {NombreOriginal}, ContentType: {ContentType}",
                         nombreOriginal, contentType);
-                    throw new ArgumentException("ARCHIVO_VACIO_0001: El archivo a subir está vacío.", nameof(stream));
+                    throw new ArchivoVacioException();
                 }
 
                 var proveedor = await ObtenerProveedorActivoAsync().ConfigureAwait(false);
@@ -143,13 +143,13 @@ namespace sel_api_archivos.Negocio.Archivo
 
                 return ideArchivo;
             }
-            catch (ArgumentException ex) when (ex.Message.StartsWith("ARCHIVO_"))
+            catch (ArchivoException ae)
             {
                 sw.Stop();
                 _logger.LogError(
                     "Error de validación en subida de archivo. " +
                     "EventId: {EventId}, ErrorCode: {ErrorCode}, Message: {Message}, DurationMs: {DurationMs}",
-                    LogEventIds.ArchivoUploadError, ex.Message.Split(':')[0], ex.Message, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoUploadError, ae.Codigo, ae.Message, sw.ElapsedMilliseconds);
                 throw;
             }
             catch (Exception ex)
@@ -385,7 +385,7 @@ namespace sel_api_archivos.Negocio.Archivo
                     "No se encontró ningún proveedor de almacenamiento activo. " +
                     "EventId: {EventId}, ErrorCode: PROVEEDOR_NO_DISPONIBLE_0001",
                     LogEventIds.ProveedorNoDisponible);
-                throw new InvalidOperationException("PROVEEDOR_NO_DISPONIBLE_0001: No se encontró ningún proveedor de almacenamiento activo en la base de datos.");
+                throw new ProveedorNoDisponibleException();
             }
             return proveedorActivo;
         }
@@ -396,7 +396,7 @@ namespace sel_api_archivos.Negocio.Archivo
         /// </summary>
         /// <param name="ideProveedor">Identificador del proveedor.</param>
         /// <returns>Entidad del proveedor.</returns>
-        /// <exception cref="InvalidOperationException">Cuando el proveedor no existe o está inactivo.</exception>
+        /// <exception cref="ProveedorInactivoException">Cuando el proveedor no existe o está inactivo.</exception>
         private async Task<ProveedorEntity> ObtenerProveedorPorIdAsync(int ideProveedor)
         {
             var proveedores = await ObtenerProveedoresCacheadosAsync().ConfigureAwait(false);
@@ -406,8 +406,8 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogError(
                     "Proveedor de almacenamiento no disponible. " +
                     "EventId: {EventId}, IdeProveedor: {IdeProveedor}, ErrorCode: PROVEEDOR_NO_DISPONIBLE_0002",
-                    1201, ideProveedor);
-                throw new InvalidOperationException($"PROVEEDOR_NO_DISPONIBLE_0002: El proveedor con ID {ideProveedor} no está disponible o está inactivo.");
+                    LogEventIds.ProveedorNoDisponible, ideProveedor);
+                throw new ProveedorInactivoException(ideProveedor);
             }
             return proveedor;
         }
@@ -443,16 +443,14 @@ namespace sel_api_archivos.Negocio.Archivo
 
             if (config.MaxFileSizeBytes > 0 && stream.Length > config.MaxFileSizeBytes)
             {
-                throw new ArgumentException(
-                    $"ARCHIVO_TAMANIO_EXCEDIDO_0001: El archivo ({stream.Length:N0} bytes) excede el límite permitido de {config.MaxFileSizeBytes:N0} bytes por el proveedor.");
+                throw new ArchivoTamanioExcedidoException(stream.Length, config.MaxFileSizeBytes);
             }
 
             if (config.AllowedContentTypes.Count > 0 &&
                 !config.AllowedContentTypes.Any(t => t.Equals(contentType, StringComparison.OrdinalIgnoreCase)))
             {
                 var tiposPermitidos = string.Join(", ", config.AllowedContentTypes);
-                throw new ArgumentException(
-                    $"ARCHIVO_TIPO_NO_PERMITIDO_0001: El Content-Type '{contentType}' no está en la lista de tipos permitidos por el proveedor. Tipos permitidos: {tiposPermitidos}.");
+                throw new ArchivoTipoNoPermitidoException(contentType, tiposPermitidos);
             }
         }
 
