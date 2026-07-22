@@ -127,12 +127,14 @@ try
     });
 
     builder.Services.AddAuthorization();
+    builder.Services.AddMemoryCache();
 
     // Registro de Inyección de Dependencias
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
         ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection no está configurada en appsettings.json.");
 
     // Capa de Datos
+    builder.Services.AddHttpContextAccessor();
     builder.Services.AddScoped<IArchivoRepositorio>(_ => new ArchivoRepositorio(connectionString));
 
     // Capa de Negocio (Estrategias de Almacenamiento)

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace sel_api_archivos.Api.Logging
+namespace sel_api_archivos.Entidad
 {
     /// <summary>
     /// Identificadores de evento para logging estructurado.

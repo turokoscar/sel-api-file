@@ -45,7 +45,7 @@ namespace sel_api_archivos.Datos
             parameters.Add("@ideArchivoGenerated", dbType: DbType.Guid, direction: ParameterDirection.Output);
 
             await connection.ExecuteAsync(
-                "ARC.SEL_ARC_SP_C_ARCHIVO",
+                "ARC.API_FILE_SP_C_ARCHIVO",
                 parameters,
                 commandType: CommandType.StoredProcedure
             ).ConfigureAwait(false);
@@ -58,7 +58,7 @@ namespace sel_api_archivos.Datos
         {
             using var connection = new SqlConnection(_connectionString);
             return await connection.QueryFirstOrDefaultAsync<ArchivoEntity>(
-                "ARC.SEL_ARC_SP_R_ARCHIVO",
+                "ARC.API_FILE_SP_R_ARCHIVO",
                 new { ideArchivo },
                 commandType: CommandType.StoredProcedure
             ).ConfigureAwait(false);
@@ -69,7 +69,7 @@ namespace sel_api_archivos.Datos
         {
             using var connection = new SqlConnection(_connectionString);
             var rowsAffected = await connection.ExecuteAsync(
-                "ARC.SEL_ARC_SP_D_ARCHIVO",
+                "ARC.API_FILE_SP_D_ARCHIVO",
                 new { ideArchivo },
                 commandType: CommandType.StoredProcedure
             ).ConfigureAwait(false);
@@ -81,7 +81,7 @@ namespace sel_api_archivos.Datos
         {
             using var connection = new SqlConnection(_connectionString);
             await connection.ExecuteAsync(
-                "ARC.SEL_ARC_SP_C_AUDITORIA",
+                "ARC.API_FILE_SP_C_AUDITORIA",
                 new { ideArchivo, txtAccion, txtUsuario, txtIpOrigen },
                 commandType: CommandType.StoredProcedure
             ).ConfigureAwait(false);
@@ -92,7 +92,7 @@ namespace sel_api_archivos.Datos
         {
             using var connection = new SqlConnection(_connectionString);
             return await connection.QueryAsync<ProveedorEntity>(
-                "ARC.SEL_ARC_SP_R_PROVEEDORES",
+                "ARC.API_FILE_SP_R_PROVEEDORES",
                 commandType: CommandType.StoredProcedure
             ).ConfigureAwait(false);
         }

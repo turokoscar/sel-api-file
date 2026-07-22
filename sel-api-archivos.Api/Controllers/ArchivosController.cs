@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using sel_api_archivos.Api.Logging;
 using sel_api_archivos.Entidad;
 using sel_api_archivos.Negocio.Archivo;
 

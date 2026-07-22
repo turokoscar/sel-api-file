@@ -2,7 +2,6 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
-using sel_api_archivos.Api.Logging;
 using sel_api_archivos.Entidad;
 
 namespace sel_api_archivos.Api.Filters

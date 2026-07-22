@@ -5,6 +5,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using sel_api_archivos.Datos;
 using sel_api_archivos.Entidad;
@@ -22,6 +24,11 @@ namespace sel_api_archivos.Negocio.Archivo
         private readonly IArchivoRepositorio _repositorio;
         private readonly IStorageProviderResolver _providerResolver;
         private readonly ILogger<ArchivoServicio> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IMemoryCache _cache;
+        private const string CorrelationIdKey = "CorrelationId";
+        private const string ProveedoresCacheKey = "proveedores_activos";
+        private static readonly TimeSpan ProveedoresCacheDuration = TimeSpan.FromMinutes(5);
 
         /// <summary>
         /// Inicializa una nueva instancia de <see cref="ArchivoServicio"/>.
@@ -29,15 +36,31 @@ namespace sel_api_archivos.Negocio.Archivo
         /// <param name="repositorio">Repositorio de acceso a datos de archivos.</param>
         /// <param name="providerResolver">Resolvedor de proveedores de almacenamiento.</param>
         /// <param name="logger">Logger para trazas estructuradas.</param>
+        /// <param name="httpContextAccessor">Acceso al contexto HTTP para obtener el CorrelationId del request.</param>
+        /// <param name="cache">Caché en memoria para proveedores de almacenamiento.</param>
         /// <exception cref="ArgumentNullException">Thrown when any parameter is null.</exception>
         public ArchivoServicio(
             IArchivoRepositorio repositorio,
             IStorageProviderResolver providerResolver,
-            ILogger<ArchivoServicio> logger)
+            ILogger<ArchivoServicio> logger,
+            IHttpContextAccessor httpContextAccessor,
+            IMemoryCache cache)
         {
             _repositorio = repositorio ?? throw new ArgumentNullException(nameof(repositorio));
             _providerResolver = providerResolver ?? throw new ArgumentNullException(nameof(providerResolver));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+        }
+
+        /// <summary>
+        /// Obtiene el CorrelationId del request actual desde el contexto HTTP,
+        /// o genera uno nuevo si no está disponible.
+        /// </summary>
+        private string GetCorrelationId()
+        {
+            var correlationId = _httpContextAccessor.HttpContext?.Items[CorrelationIdKey] as string;
+            return correlationId ?? Guid.NewGuid().ToString();
         }
 
         /// <inheritdoc />
@@ -50,7 +73,7 @@ namespace sel_api_archivos.Negocio.Archivo
             string usuario,
             string ipOrigen)
         {
-            var correlationId = Guid.NewGuid().ToString();
+            var correlationId = GetCorrelationId();
             var sw = Stopwatch.StartNew();
 
             using var _ = _logger.BeginScope(new Dictionary<string, object>
@@ -116,7 +139,7 @@ namespace sel_api_archivos.Negocio.Archivo
                     "Archivo subido exitosamente. " +
                     "EventId: {EventId}, FileId: {FileId}, FileSizeBytes: {FileSizeBytes}, " +
                     "ContentType: {ContentType}, StorageProvider: {StorageProvider}, DurationMs: {DurationMs}",
-                    1001, ideArchivo, stream.Length, contentType, proveedor.CodProveedor, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoUploadSuccess, ideArchivo, stream.Length, contentType, proveedor.CodProveedor, sw.ElapsedMilliseconds);
 
                 return ideArchivo;
             }
@@ -126,7 +149,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogError(
                     "Error de validación en subida de archivo. " +
                     "EventId: {EventId}, ErrorCode: {ErrorCode}, Message: {Message}, DurationMs: {DurationMs}",
-                    1002, ex.Message.Split(':')[0], ex.Message, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoUploadError, ex.Message.Split(':')[0], ex.Message, sw.ElapsedMilliseconds);
                 throw;
             }
             catch (Exception ex)
@@ -135,7 +158,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogError(ex,
                     "Error inesperado en subida de archivo. " +
                     "EventId: {EventId}, ErrorCode: ERROR_INTERNO_0001, Message: {Message}, DurationMs: {DurationMs}",
-                    1002, ex.Message, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoUploadError, ex.Message, sw.ElapsedMilliseconds);
                 throw;
             }
         }
@@ -146,7 +169,7 @@ namespace sel_api_archivos.Negocio.Archivo
             string usuario,
             string ipOrigen)
         {
-            var correlationId = Guid.NewGuid().ToString();
+            var correlationId = GetCorrelationId();
             var sw = Stopwatch.StartNew();
 
             using var _ = _logger.BeginScope(new Dictionary<string, object>
@@ -174,7 +197,7 @@ namespace sel_api_archivos.Negocio.Archivo
                     "Archivo descargado exitosamente. " +
                     "EventId: {EventId}, FileId: {FileId}, FileSizeBytes: {FileSizeBytes}, " +
                     "StorageProvider: {StorageProvider}, DurationMs: {DurationMs}",
-                    1003, ideArchivo, metadata.CanTamanioBytes, proveedor.CodProveedor, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoDownloadSuccess, ideArchivo, metadata.CanTamanioBytes, proveedor.CodProveedor, sw.ElapsedMilliseconds);
 
                 return (stream, metadata);
             }
@@ -184,7 +207,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogWarning(
                     "Archivo no encontrado para descarga. " +
                     "EventId: {EventId}, FileId: {FileId}, ErrorCode: {ErrorCode}, Message: {Message}, DurationMs: {DurationMs}",
-                    1004, ideArchivo, "ARCHIVO_NO_ENCONTRADO", ex.Message, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoDownloadError, ideArchivo, "ARCHIVO_NO_ENCONTRADO", ex.Message, sw.ElapsedMilliseconds);
                 throw;
             }
             catch (Exception ex)
@@ -193,7 +216,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogError(ex,
                     "Error inesperado en descarga de archivo. " +
                     "EventId: {EventId}, FileId: {FileId}, ErrorCode: ERROR_INTERNO_0001, DurationMs: {DurationMs}",
-                    1004, ideArchivo, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoDownloadError, ideArchivo, sw.ElapsedMilliseconds);
                 throw;
             }
         }
@@ -201,7 +224,7 @@ namespace sel_api_archivos.Negocio.Archivo
         /// <inheritdoc />
         public async Task<ArchivoEntity> ObtenerMetadataAsync(Guid ideArchivo)
         {
-            var correlationId = Guid.NewGuid().ToString();
+            var correlationId = GetCorrelationId();
             var sw = Stopwatch.StartNew();
 
             using var _ = _logger.BeginScope(new Dictionary<string, object>
@@ -218,7 +241,7 @@ namespace sel_api_archivos.Negocio.Archivo
                     _logger.LogWarning(
                         "Metadata de archivo no encontrada. " +
                         "EventId: {EventId}, FileId: {FileId}, ErrorCode: ARCHIVO_NO_ENCONTRADO_0001, DurationMs: {DurationMs}",
-                        1010, ideArchivo, sw.ElapsedMilliseconds);
+                        LogEventIds.ArchivoMetadataError, ideArchivo, sw.ElapsedMilliseconds);
                     throw new FileNotFoundException($"ARCHIVO_NO_ENCONTRADO_0001: No se encontró la metadata del archivo con ID: {ideArchivo}");
                 }
 
@@ -226,7 +249,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogInformation(
                     "Metadata obtenida exitosamente. " +
                     "EventId: {EventId}, FileId: {FileId}, ContentType: {ContentType}, DurationMs: {DurationMs}",
-                    1009, ideArchivo, metadata.TxtContentType, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoMetadataSuccess, ideArchivo, metadata.TxtContentType, sw.ElapsedMilliseconds);
 
                 return metadata;
             }
@@ -240,7 +263,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogError(ex,
                     "Error inesperado al obtener metadata. " +
                     "EventId: {EventId}, FileId: {FileId}, ErrorCode: ERROR_INTERNO_0001, DurationMs: {DurationMs}",
-                    1010, ideArchivo, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoMetadataError, ideArchivo, sw.ElapsedMilliseconds);
                 throw;
             }
         }
@@ -248,7 +271,7 @@ namespace sel_api_archivos.Negocio.Archivo
         /// <inheritdoc />
         public async Task<string> LeerContenidoTextoAsync(Guid ideArchivo, string usuario, string ipOrigen)
         {
-            var correlationId = Guid.NewGuid().ToString();
+            var correlationId = GetCorrelationId();
             var sw = Stopwatch.StartNew();
 
             using var _ = _logger.BeginScope(new Dictionary<string, object>
@@ -275,7 +298,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogInformation(
                     "Contenido de texto leído exitosamente. " +
                     "EventId: {EventId}, FileId: {FileId}, ContentLength: {ContentLength}, DurationMs: {DurationMs}",
-                    1005, ideArchivo, contenido.Length, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoReadSuccess, ideArchivo, contenido.Length, sw.ElapsedMilliseconds);
 
                 return contenido;
             }
@@ -289,7 +312,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogError(ex,
                     "Error inesperado al leer contenido de texto. " +
                     "EventId: {EventId}, FileId: {FileId}, ErrorCode: ERROR_INTERNO_0001, DurationMs: {DurationMs}",
-                    1006, ideArchivo, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoReadError, ideArchivo, sw.ElapsedMilliseconds);
                 throw;
             }
         }
@@ -297,7 +320,7 @@ namespace sel_api_archivos.Negocio.Archivo
         /// <inheritdoc />
         public async Task<bool> EliminarArchivoAsync(Guid ideArchivo, string usuario, string ipOrigen)
         {
-            var correlationId = Guid.NewGuid().ToString();
+            var correlationId = GetCorrelationId();
             var sw = Stopwatch.StartNew();
 
             using var _ = _logger.BeginScope(new Dictionary<string, object>
@@ -327,7 +350,7 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogInformation(
                     "Archivo eliminado. " +
                     "EventId: {EventId}, FileId: {FileId}, Eliminado: {Eliminado}, DurationMs: {DurationMs}",
-                    1007, ideArchivo, eliminado, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoDeleteSuccess, ideArchivo, eliminado, sw.ElapsedMilliseconds);
 
                 return eliminado;
             }
@@ -341,26 +364,27 @@ namespace sel_api_archivos.Negocio.Archivo
                 _logger.LogError(ex,
                     "Error inesperado al eliminar archivo. " +
                     "EventId: {EventId}, FileId: {FileId}, ErrorCode: ERROR_INTERNO_0001, DurationMs: {DurationMs}",
-                    1008, ideArchivo, sw.ElapsedMilliseconds);
+                    LogEventIds.ArchivoDeleteError, ideArchivo, sw.ElapsedMilliseconds);
                 throw;
             }
         }
 
         /// <summary>
         /// Obtiene el proveedor de almacenamiento activo por defecto.
+        /// Los proveedores se cachean en memoria por 5 minutos.
         /// </summary>
         /// <returns>Entidad del proveedor activo.</returns>
         /// <exception cref="InvalidOperationException">Cuando no hay ningún proveedor activo.</exception>
         private async Task<ProveedorEntity> ObtenerProveedorActivoAsync()
         {
-            var proveedores = await _repositorio.ListarProveedoresActivosAsync().ConfigureAwait(false);
+            var proveedores = await ObtenerProveedoresCacheadosAsync().ConfigureAwait(false);
             var proveedorActivo = proveedores.FirstOrDefault(p => p.FlgActivo);
             if (proveedorActivo == null)
             {
                 _logger.LogError(
                     "No se encontró ningún proveedor de almacenamiento activo. " +
                     "EventId: {EventId}, ErrorCode: PROVEEDOR_NO_DISPONIBLE_0001",
-                    1201);
+                    LogEventIds.ProveedorNoDisponible);
                 throw new InvalidOperationException("PROVEEDOR_NO_DISPONIBLE_0001: No se encontró ningún proveedor de almacenamiento activo en la base de datos.");
             }
             return proveedorActivo;
@@ -368,13 +392,14 @@ namespace sel_api_archivos.Negocio.Archivo
 
         /// <summary>
         /// Obtiene un proveedor de almacenamiento por su identificador.
+        /// Los proveedores se cachean en memoria por 5 minutos.
         /// </summary>
         /// <param name="ideProveedor">Identificador del proveedor.</param>
         /// <returns>Entidad del proveedor.</returns>
         /// <exception cref="InvalidOperationException">Cuando el proveedor no existe o está inactivo.</exception>
         private async Task<ProveedorEntity> ObtenerProveedorPorIdAsync(int ideProveedor)
         {
-            var proveedores = await _repositorio.ListarProveedoresActivosAsync().ConfigureAwait(false);
+            var proveedores = await ObtenerProveedoresCacheadosAsync().ConfigureAwait(false);
             var proveedor = proveedores.FirstOrDefault(p => p.IdeProveedor == ideProveedor);
             if (proveedor == null)
             {
@@ -385,6 +410,28 @@ namespace sel_api_archivos.Negocio.Archivo
                 throw new InvalidOperationException($"PROVEEDOR_NO_DISPONIBLE_0002: El proveedor con ID {ideProveedor} no está disponible o está inactivo.");
             }
             return proveedor;
+        }
+
+        /// <summary>
+        /// Obtiene la lista de proveedores activos desde caché o desde la base de datos.
+        /// </summary>
+        private async Task<IEnumerable<ProveedorEntity>> ObtenerProveedoresCacheadosAsync()
+        {
+            if (_cache.TryGetValue(ProveedoresCacheKey, out IEnumerable<ProveedorEntity>? cached))
+            {
+                return cached!;
+            }
+
+            var proveedores = await _repositorio.ListarProveedoresActivosAsync().ConfigureAwait(false);
+            var proveedorList = proveedores.ToList();
+
+            var cacheOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = ProveedoresCacheDuration
+            };
+            _cache.Set(ProveedoresCacheKey, proveedorList, cacheOptions);
+
+            return proveedorList;
         }
 
         /// <summary>

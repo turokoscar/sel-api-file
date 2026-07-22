@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using sel_api_archivos.Datos;
@@ -20,6 +22,8 @@ namespace sel_api_archivos.Pruebas
         private readonly IStorageProviderResolver _resolverMock;
         private readonly IStorageProvider _storageMock;
         private readonly ILogger<ArchivoServicio> _loggerMock;
+        private readonly IHttpContextAccessor _httpContextAccessorMock;
+        private readonly IMemoryCache _cacheMock;
         private readonly ArchivoServicio _servicio;
 
         public ArchivoServicioTests()
@@ -28,8 +32,14 @@ namespace sel_api_archivos.Pruebas
             _resolverMock = Substitute.For<IStorageProviderResolver>();
             _storageMock = Substitute.For<IStorageProvider>();
             _loggerMock = Substitute.For<ILogger<ArchivoServicio>>();
+            _httpContextAccessorMock = Substitute.For<IHttpContextAccessor>();
+            _cacheMock = Substitute.For<IMemoryCache>();
 
-            _servicio = new ArchivoServicio(_repositorioMock, _resolverMock, _loggerMock);
+            var httpContext = new DefaultHttpContext();
+            httpContext.Items["CorrelationId"] = Guid.NewGuid().ToString();
+            _httpContextAccessorMock.HttpContext.Returns(httpContext);
+
+            _servicio = new ArchivoServicio(_repositorioMock, _resolverMock, _loggerMock, _httpContextAccessorMock, _cacheMock);
         }
 
         [Fact]

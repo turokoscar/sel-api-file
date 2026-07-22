@@ -8,7 +8,6 @@ COPY sel-api-archivos.Api/sel-api-archivos.Api.csproj sel-api-archivos.Api/
 COPY sel-api-archivos.Negocio/sel-api-archivos.Negocio.csproj sel-api-archivos.Negocio/
 COPY sel-api-archivos.Datos/sel-api-archivos.Datos.csproj sel-api-archivos.Datos/
 COPY sel-api-archivos.Entidad/sel-api-archivos.Entidad.csproj sel-api-archivos.Entidad/
-COPY sel-api-archivos.Utils/sel-api-archivos.Utils.csproj sel-api-archivos.Utils/
 
 RUN dotnet restore sel-api-archivos.Api/sel-api-archivos.Api.csproj
 
