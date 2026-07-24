@@ -23,6 +23,10 @@
 USE BD_API_FILE;
 GO
 
+SET QUOTED_IDENTIFIER ON;
+SET ANSI_NULLS ON;
+GO
+
 -- =========================================================================
 -- Indice 01: TMM_ARCHIVO - codSistema, codProceso
 -- Uso: Listar archivos por sistema y proceso (endpoint GET /archivos)

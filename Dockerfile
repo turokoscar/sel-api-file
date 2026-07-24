@@ -4,6 +4,7 @@ WORKDIR /src
 
 # Copy project files
 COPY *.slnx .
+COPY Directory.Build.props .
 COPY sel-api-archivos.Api/sel-api-archivos.Api.csproj sel-api-archivos.Api/
 COPY sel-api-archivos.Negocio/sel-api-archivos.Negocio.csproj sel-api-archivos.Negocio/
 COPY sel-api-archivos.Datos/sel-api-archivos.Datos.csproj sel-api-archivos.Datos/
