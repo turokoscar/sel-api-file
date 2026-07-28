@@ -249,7 +249,7 @@ VALUES
 (
     'LOCAL',
     'Almacenamiento Local del Servidor',
-    '{"localStoragePath": "/var/sel-api-archivos/storage", "maxFileSizeBytes": 52428800, "allowedContentTypes": ["application/pdf", "image/png", "image/jpeg", "text/plain"]}',
+    '{"localStoragePath": "/var/storage", "maxFileSizeBytes": 52428800, "allowedContentTypes": ["application/pdf", "image/png", "image/jpeg", "text/plain"]}',
     1,
     1,
     'SYSTEM'

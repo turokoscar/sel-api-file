@@ -32,7 +32,7 @@ RUN groupadd -r appgroup && useradd -r -g appgroup appuser
 COPY --from=build /app/publish .
 
 # Crear directorio de almacenamiento para archivos cargados y dar permisos
-RUN mkdir -p /app/storage && chown -R appuser:appgroup /app/storage
+RUN mkdir -p /var/storage && chown -R appuser:appgroup /var/storage
 
 RUN chown -R appuser:appgroup /app
 USER appuser
