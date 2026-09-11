@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using sel_api_archivos.Datos;
@@ -131,7 +132,22 @@ namespace sel_api_archivos.Negocio.Archivo
                     TxtCreadoPor = usuario
                 };
 
-                Guid ideArchivo = await _repositorio.RegistrarArchivoAsync(archivo).ConfigureAwait(false);
+                Guid ideArchivo;
+                try
+                {
+                    ideArchivo = await _repositorio.RegistrarArchivoAsync(archivo).ConfigureAwait(false);
+                }
+                catch (SqlException sqlEx) when (EsViolacionDeChecksumDuplicado(sqlEx))
+                {
+                    _logger.LogWarning(
+                        "Intento de registrar archivo duplicado. " +
+                        "EventId: {EventId}, ErrorCode: ARCHIVO_DUPLICADO_0001, Checksum: {Checksum}",
+                        LogEventIds.ArchivoUploadError, checksum);
+
+                    await EliminarArchivoFisicoSilenciosoAsync(storage, nombreFisico, rutaRelativa, proveedor.JsnConfiguracion).ConfigureAwait(false);
+                    throw new ArchivoDuplicadoException(checksum);
+                }
+
                 await _repositorio.RegistrarAuditoriaAsync(ideArchivo, "UPLOAD", usuario, ipOrigen).ConfigureAwait(false);
 
                 sw.Stop();
@@ -451,6 +467,38 @@ namespace sel_api_archivos.Negocio.Archivo
             {
                 var tiposPermitidos = string.Join(", ", config.AllowedContentTypes);
                 throw new ArchivoTipoNoPermitidoException(contentType, tiposPermitidos);
+            }
+        }
+
+        /// <summary>
+        /// Determina si la excepción SQL corresponde a una violación del índice único
+        /// de checksum SHA256 (<c>API_FILE_ARCHIVO_IDX_03</c>), es decir, un archivo duplicado.
+        /// </summary>
+        private static bool EsViolacionDeChecksumDuplicado(SqlException sqlEx)
+        {
+            // 2601: "Cannot insert duplicate key row... with unique index"
+            // 2627: "Violation of UNIQUE KEY constraint"
+            return (sqlEx.Number == 2601 || sqlEx.Number == 2627)
+                && sqlEx.Message.Contains("API_FILE_ARCHIVO_IDX_03", StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Elimina el archivo físico ya subido al storage cuando el registro en base de datos falla,
+        /// evitando dejar archivos huérfanos. Los errores de limpieza se registran pero no se propagan,
+        /// para no ocultar la excepción de negocio original.
+        /// </summary>
+        private async Task EliminarArchivoFisicoSilenciosoAsync(IStorageProvider storage, string nombreFisico, string rutaRelativa, string configJson)
+        {
+            try
+            {
+                await storage.DeleteAsync(nombreFisico, rutaRelativa, configJson).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex,
+                    "No se pudo eliminar el archivo físico huérfano tras un registro fallido. " +
+                    "NombreFisico: {NombreFisico}, RutaRelativa: {RutaRelativa}",
+                    nombreFisico, rutaRelativa);
             }
         }
 

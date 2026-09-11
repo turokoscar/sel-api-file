@@ -17,6 +17,10 @@
 USE BD_API_FILE;
 GO
 
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+GO
+
 -- =========================================================================
 -- 1. SP: Listar Archivos por Sistema con Paginacion (Read)
 -- =========================================================================

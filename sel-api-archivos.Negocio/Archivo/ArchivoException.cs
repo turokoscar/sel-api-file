@@ -65,4 +65,18 @@ namespace sel_api_archivos.Negocio.Archivo
             : base("ARCHIVO_TIPO_NO_PERMITIDO_0001", 400,
                    $"ARCHIVO_TIPO_NO_PERMITIDO_0001: El Content-Type '{contentType}' no está en la lista de tipos permitidos por el proveedor. Tipos permitidos: {tiposPermitidos}.") { }
     }
+
+    /// <summary>
+    /// Ya existe un archivo activo con el mismo contenido (checksum SHA256).
+    /// </summary>
+    public sealed class ArchivoDuplicadoException : ArchivoException
+    {
+        /// <summary>
+        /// Inicializa una nueva instancia.
+        /// </summary>
+        /// <param name="checksum">Checksum SHA256 del archivo duplicado.</param>
+        public ArchivoDuplicadoException(string checksum)
+            : base("ARCHIVO_DUPLICADO_0001", 409,
+                   $"ARCHIVO_DUPLICADO_0001: Ya existe un archivo activo con el mismo contenido (checksum SHA256: {checksum}).") { }
+    }
 }

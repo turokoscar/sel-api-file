@@ -109,6 +109,7 @@ namespace sel_api_archivos.Api.Filters
                 ArchivoVacioException => (StatusCodes.Status400BadRequest, "ARCHIVO_VACIO"),
                 ArchivoTamanioExcedidoException => (StatusCodes.Status400BadRequest, "ARCHIVO_TAMANIO_EXCEDIDO"),
                 ArchivoTipoNoPermitidoException => (StatusCodes.Status400BadRequest, "ARCHIVO_TIPO_NO_PERMITIDO"),
+                ArchivoDuplicadoException => (StatusCodes.Status409Conflict, "ARCHIVO_DUPLICADO"),
                 ProveedorNoDisponibleException => (StatusCodes.Status503ServiceUnavailable, "PROVEEDOR_NO_DISPONIBLE"),
                 ProveedorInactivoException => (StatusCodes.Status503ServiceUnavailable, "PROVEEDOR_NO_DISPONIBLE"),
                 ProveedorCodigoDesconocidoException => (StatusCodes.Status503ServiceUnavailable, "PROVEEDOR_NO_DISPONIBLE"),
